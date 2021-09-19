@@ -227,7 +227,8 @@ const Channel = ({
                                         <Badge
                                             color='secondary'
                                             badgeContent={
-                                                getNotificationCount || null
+                                                getNotificationCount(ch.id)
+                                                // '10'
                                             }
                                             max={999}
                                         >
