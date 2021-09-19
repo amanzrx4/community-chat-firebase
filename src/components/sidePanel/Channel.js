@@ -62,6 +62,10 @@ const Channel = ({
             setChannel([...channelsArray]);
 
             console.log('channel state', channel);
+            setChannelPublic((prev) => ({
+                ...prev,
+                channelPub: channelsArray,
+            }));
             addNotificationListner(snap.key);
 
             if (firstLoad && channelsArray.length > 0 && !currentChannel) {
@@ -82,10 +86,10 @@ const Channel = ({
     }, []);
 
     const addNotificationListner = (channelId) => {
-        onValue(child(channelsRef, channelId), (snap) => {
+        onValue(child(messagesRef, channelId), (snap) => {
             if (channelPub) {
                 console.log('yes channel pub');
-                handleNotification(channelId, channel.id, notifications, snap);
+                handleNotification(channelId, currentChannel.id, notifications, snap);
             }
         });
     };
@@ -131,16 +135,16 @@ const Channel = ({
         if (index !== -1) {
             if (channelId !== currentChannelId) {
                 lastTotal = notifications[index].total;
-                if (snap.numChildren() - lastTotal > 0) {
-                    notifications[index].count = snap.numChildren() - lastTotal;
+                if (snap.size() - lastTotal > 0) {
+                    notifications[index].count = snap.size() - lastTotal;
                 }
             }
-            notifications[index].lastKnownTotal = snap.numChildren();
+            notifications[index].lastKnownTotal = snap.size();
         } else {
             notifications.push({
                 id: channelId,
-                totalValue: snap.numChildren(),
-                lastKnownTotal: snap.numChildren(),
+                total: snap.size(),
+                lastKnownTotal: snap.size(),
                 count: 0,
             });
         }

@@ -29,6 +29,7 @@ import {
     onChildChanged,
     query,
     onChildAdded,
+    getChildrenCount
 } from 'firebase/database';
 
 import { updateCurrentUser } from '@firebase/auth';
@@ -238,7 +239,6 @@ const Messages = ({ currentChannel, currentUser, isPrivateChannel }) => {
 
     const sendMessage = (downloadURLImage = null) => {
         console.log('download url reached', downloadURLImage);
-        // setFileUrl(downloadURLImage);
         console.log('download url reached 2', downloadURLImage);
 
         if (downloadURLImage || messageInput) {
@@ -248,6 +248,7 @@ const Messages = ({ currentChannel, currentUser, isPrivateChannel }) => {
                 loading: true,
             }));
             messageSent(downloadURLImage);
+            
         } else {
             console.log('not doing bro');
             setInputState((prev) => ({
