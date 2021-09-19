@@ -139,7 +139,7 @@ const Messages = ({ currentChannel, currentUser, isPrivateChannel }) => {
                     messages: messagesArray,
                     messagesLoading: false,
                 }));
-                console.log(messagesArray);
+                // console.log(messagesArray);
                 countUniqueUsers(messagesArray);
             }
         );

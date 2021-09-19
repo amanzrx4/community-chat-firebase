@@ -47,28 +47,33 @@ const Channel = ({
         channelPub: null,
         channelsRef: ref(db, 'channels'),
         messagesRef: ref(db, 'messages'),
-        notifications: [],
     });
 
-    const { channelPub, channelsRef, messagesRef, notifications } =
-        channelPublic;
+    const [notifications, setNotifications] = useState([]);
+
+    const { channelPub, channelsRef, messagesRef } = channelPublic;
 
     useEffect(() => {
-        console.log('current channel', currentChannel);
+        console.log('current channel', typeof currentChannel);
+
         let channelsArray = [];
+
         const childAdded = onChildAdded(query(ref(db, '/channels')), (snap) => {
+            console.log('snap size', snap.key);
             channelsArray.push(snap.val());
+
+            // console.log('messages ref', child(messagesRef, `/${snap.key}`));
 
             setChannel([...channelsArray]);
 
             console.log('channel state', channel);
             setChannelPublic((prev) => ({
                 ...prev,
-                channelPub: channelsArray,
+                channelPub: currentChannel,
             }));
-            addNotificationListner(snap.key);
 
             if (firstLoad && channelsArray.length > 0 && !currentChannel) {
+                console.log('yes current channel');
                 setCurrentChannel(channelsArray[0]);
                 setChannelPublic((prev) => ({
                     ...prev,
@@ -78,20 +83,69 @@ const Channel = ({
                 setFirstLoad(false);
                 console.log('initial channel set');
             }
+
+            addNotificationListner(snap.key);
         });
 
         return () => {
             childAdded();
         };
-    }, []);
+    }, [currentChannel]);
 
     const addNotificationListner = (channelId) => {
-        onValue(child(messagesRef, channelId), (snap) => {
+        if (!currentChannel) return;
+
+        let refNew = child(ref(db, 'messages'), channelId);
+        console.log('channel pub', channelId);
+
+        onValue(refNew, (snap) => {
             if (channelPub) {
-                console.log('yes channel pub');
-                handleNotification(channelId, currentChannel.id, notifications, snap);
+                console.log('yes channel pub', snap);
+                handleNotification(channelId, channel.id, notifications, snap);
             }
         });
+    };
+
+    const handleNotification = (
+        channelId,
+        currentChannelId,
+        notifications,
+        snap
+    ) => {
+        let newArray = [];
+        console.log('yes handle notificstions');
+        let lastTotal = 0;
+        // if (notifications.length == 0) return;
+
+        let index = notifications.findIndex(
+            (notification) => notification.id == channelId
+        );
+        if (index !== -1) {
+            if (channelId !== currentChannelId) {
+                lastTotal = notifications[index].total;
+                if (snap.size - lastTotal > 0) {
+                    notifications[index].count = snap.size - lastTotal;
+                }
+            }
+            notifications[index].lastKnownTotal = snap.size;
+        } else {
+            const newArr = {
+                id: channelId,
+                total: snap.size,
+                lastKnownTotal: snap.size,
+                count: 0,
+            };
+            console.log('new array', newArray);
+            // notifications.push({
+            //     id: channelId,
+            //     total: snap.size(),
+            //     lastKnownTotal: snap.size(),
+            //
+            //     count: 0,
+            // });
+            // setNotifications(notifications.concat(newArray));
+            setNotifications((prev) => [...prev, newArr]);
+        }
     };
 
     const clearNotifications = () => {
@@ -103,53 +157,29 @@ const Channel = ({
             let updatedNotifications = [...notifications];
             updatedNotifications[index].total =
                 notifications[index].lastKnownTotal;
+
             updatedNotifications[index].count = 0;
-            setChannelPublic((prev) => ({
-                ...prev,
-                notifications: updatedNotifications,
-            }));
+            // setChannelPublic((prev) => ({
+            //     ...prev,
+            //     notifications: updatedNotifications,
+            // }));
+            // setNotifications(notifications.concat(updatedNotifications));
+            setNotifications([updatedNotifications]);
         }
     };
 
     const getNotificationCount = (channelSp) => {
         let count = 0;
+        if (!notifications.length == 0) return false;
         notifications.forEach((notification) => {
-            if (notification.id === channelSp.id) {
+            if (notification.id == channelSp.id) {
                 count = notification.count;
             }
+            console.log('notification bro', notification);
         });
         if (count > 0) return count;
     };
 
-    const handleNotification = (
-        channelId,
-        currentChannelId,
-        notifications,
-        snap
-    ) => {
-        console.log('yes handle notificstions');
-        let lastTotal = 0;
-        let index = notifications.findIndex(
-            (notification) => notification.id == channelId
-        );
-        if (index !== -1) {
-            if (channelId !== currentChannelId) {
-                lastTotal = notifications[index].total;
-                if (snap.size() - lastTotal > 0) {
-                    notifications[index].count = snap.size() - lastTotal;
-                }
-            }
-            notifications[index].lastKnownTotal = snap.size();
-        } else {
-            notifications.push({
-                id: channelId,
-                total: snap.size(),
-                lastKnownTotal: snap.size(),
-                count: 0,
-            });
-        }
-        setChannelPublic((prev) => ({ ...prev, notifications }));
-    };
     return (
         <>
             <ListItem style={{ borderRadius: 9, color: 'black' }} button>
@@ -196,7 +226,9 @@ const Channel = ({
                                     <ListItemIcon>
                                         <Badge
                                             color='secondary'
-                                            badgeContent={getNotificationCount()}
+                                            badgeContent={
+                                                getNotificationCount || null
+                                            }
                                             max={999}
                                         >
                                             <InboxIcon />
@@ -215,7 +247,6 @@ const Channel = ({
 const mapStateFromProps = (state) => ({
     currentChannel: state.channel.currentChannel,
 });
-
 export default connect(mapStateFromProps, {
     setCurrentChannel,
     setPrivateChannel,
