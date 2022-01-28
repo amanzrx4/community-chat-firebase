@@ -15,6 +15,7 @@ import {
     ListItemSecondaryAction,
     IconButton,
 } from '@material-ui/core';
+
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import Divider from '@material-ui/core/Divider';
 import InboxIcon from '@material-ui/icons/Inbox';
@@ -84,7 +85,7 @@ const UserPanel = ({ currentUser }) => {
     const [age, setAge] = React.useState('');
     const [state, setState] = React.useState(false);
 
-    const [channel, setChannel] = useState([]);
+    const [channels, setChannels] = useState([]);
 
     const handleSignOut = () => {
         console.log('signed out');
@@ -164,9 +165,9 @@ const UserPanel = ({ currentUser }) => {
                             disabled
                         >
                             <Channel
-                                channel={channel}
+                                channels={channels}
                                 setState={setState}
-                                setChannel={setChannel}
+                                setChannels={setChannels}
                                 setOpen={setOpen}
                                 state={state}
                             />
@@ -177,10 +178,10 @@ const UserPanel = ({ currentUser }) => {
                 </List>
             </div>
             <ChannelModal
-                channel={channel}
+                channels={channels}
                 open={open}
                 setOpen={setOpen}
-                setChannel={setChannel}
+                setChannels={setChannels}
             />
         </>
     );

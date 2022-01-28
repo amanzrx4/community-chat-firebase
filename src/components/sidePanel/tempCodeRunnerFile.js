@@ -1,72 +1,21 @@
-<Grid container spacing={3}>
-    <Grid item xs={12}>
-        <Paper>xs=12</Paper>
-    </Grid>
-    <Grid item xs={12} container>
-        <Grid item xs container direction='column' spacing={3}>
-            <Grid item xs={4}>
-                <Paper>xs=4</Paper>
-            </Grid>
-            <Grid item xs={8}>
-                <Paper>
-                    <Grid item xs container direction='column' spacing={2}>
-                        <Grid item xs={12}>
-                            <Paper>
-                                <Grid
-                                    item
-                                    xs
-                                    container
-                                    direction='row'
-                                    spacing={1}
-                                >
-                                    <Grid item xs={6}>
-                                        <Paper>xs=4</Paper>
-                                    </Grid>
-                                    <Grid item xs={6}>
-                                        <Paper>xs=4</Paper>
-                                    </Grid>
-                                </Grid>
-                            </Paper>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Paper>
-                                <Grid
-                                    item
-                                    xs
-                                    container
-                                    direction='row'
-                                    spacing={1}
-                                >
-                                    <Grid item xs={6}>
-                                        <Paper>xs=4</Paper>
-                                    </Grid>
-                                    <Grid item xs={6}>
-                                        <Paper>xs=4</Paper>
-                                    </Grid>
-                                </Grid>
-                            </Paper>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Paper>
-                                <Grid
-                                    item
-                                    xs
-                                    container
-                                    direction='row'
-                                    spacing={1}
-                                >
-                                    <Grid item xs={6}>
-                                        <Paper>xs=4</Paper>
-                                    </Grid>
-                                    <Grid item xs={6}>
-                                        <Paper>xs=4</Paper>
-                                    </Grid>
-                                </Grid>
-                            </Paper>
-                        </Grid>
-                    </Grid>
-                </Paper>
-            </Grid>
-        </Grid>
-    </Grid>
-</Grid>;
+import { useState } from 'react';
+
+export default function Counter() {
+  const [state, setState] = useState({
+    name: "aman",
+    age: []
+  });
+
+  function handleClick() {
+    const firstArray = [1, 2, 3];
+    const secondArray = [4, 5, 6];
+    setState(prev => ({ ...prev, age: firstArray}));
+    console.log(count);
+  }
+
+  return (
+    <button onClick={handleClick}>
+      You pressed me {count} times
+    </button>
+  );
+}

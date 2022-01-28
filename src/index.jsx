@@ -5,7 +5,7 @@ import App from './components/App';
 import { useTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/core/styles';
 
-import { CircularProgress, LinearProgress } from '@material-ui/core';
+import { LinearProgress } from '@material-ui/core';
 
 import {
     BrowserRouter as Router,
@@ -21,7 +21,7 @@ import {
 import Login from './components/auth/Login';
 import Register from './components/auth/Register';
 import { useState, useEffect } from 'react';
-import { onAuthStateChanged, getAuth } from 'firebase/auth';
+import { onAuthStateChanged } from 'firebase/auth';
 // import useAuthState from './firebase/useAuthState';
 
 import { auth } from './firebase/config';
@@ -35,7 +35,7 @@ import { setUser, clearUser } from './actions';
 const store = createStore(rootReducer, composeWithDevTools());
 
 const Routes = (props) => {
-    const [authUser, setAuthUser] = useState(null);
+    // const [authUser, setAuthUser] = useState(null);
     const history = useHistory();
 
     const [newLoad, setNewLoad] = useState(true);

@@ -13,6 +13,7 @@
     "classnames": "^2.3.1",
     "emoji-mart": "^3.0.1",
     "firebase": "^9.0.1",
+    "lodash": "^4.17.21",
     "md5": "^2.3.0",
     "moment": "^2.29.1",
     "react": "^17.0.2",
@@ -20,6 +21,7 @@
     "react-color": "^2.19.3",
     "react-dom": "^17.0.2",
     "react-redux": "^7.2.4",
+    "react-refresh": "^0.11.0",
     "react-router-dom": "^5.2.1",
     "react-scripts": "4.0.3",
     "redux": "^4.1.1",
@@ -50,5 +52,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.4"
   }
 }
