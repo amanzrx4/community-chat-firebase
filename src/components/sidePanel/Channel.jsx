@@ -163,6 +163,10 @@ const Channel = ({
         console.log('yes currentCHannel works');
         handleNotification(channelId, currentChannel.id, notifications, snap);
       }
+
+      else {
+        console.log('current channel doent work');
+      }
     });
   };
 
