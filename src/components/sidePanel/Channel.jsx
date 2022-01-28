@@ -73,12 +73,14 @@ const Channel = ({
 
   useEffect(() => {
     // jhj
-    // let LoadedChannel = [];
-    const childAdded = onValue(ref(db, 'channels'), (snapshot) => {
-      const dataSnap = snapshotToArray(snapshot.val());
+    let LoadedChannel = [];
+    const childAdded = onChildAdded(ref(db, 'channels'), (snapshot) => {
+      LoadedChannel.push(snapshot.val());
+      setChannels(loadedChannel);
+      // const dataSnap = snapshotToArray(snapshot.val());
       // const ty = snapshot;
       // console.log(snapshot);
-      setChannels(dataSnap);
+      // setChannels(dataSnap);
       // if (channels) setCurrentChannel(channels?.channels[0]);
       // setFirstChannel(channels?.[0]);
       // setActiveClass(channels[0]?.id);
