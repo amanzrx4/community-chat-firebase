@@ -188,13 +188,13 @@ const Channel = ({
       notifications[index].lastKnownTotal = snap.size;
     } else {
       console.log('else block bro');
-      newArr.push({
+      notifications.push({
         id: channelId,
         total: snap.size,
         lastKnownTotal: snap.size,
         count: 0,
       });
-      setNotifications((prev) => [...prev, ...newArr]);
+      setNotifications((prev) => [...prev, notifications]);
     }
   };
 
