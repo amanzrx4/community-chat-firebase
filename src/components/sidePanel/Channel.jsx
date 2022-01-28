@@ -279,7 +279,8 @@ const Channel = ({
                   selected={ch.id === activeClass}
                   onClick={() => {
                     currentChannelUpdate(ch);
-                    clearNotifications();
+
+                  
                     // setChannelPublic((prev) =f> ({
                     //     ...prev,
                     //     channel: ch,
