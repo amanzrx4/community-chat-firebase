@@ -73,9 +73,10 @@ const Channel = ({
 
   useEffect(() => {
     // jhj
-    let LoadedChannel = [];
+    let loadedChannel = [];
     const childAdded = onChildAdded(ref(db, 'channels'), (snapshot) => {
-      LoadedChannel.push(snapshot.val());
+
+      loadedChannel.push(snapshot.val());
       setChannels(loadedChannel);
       // const dataSnap = snapshotToArray(snapshot.val());
       // const ty = snapshot;
