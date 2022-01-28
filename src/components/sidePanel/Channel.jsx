@@ -75,7 +75,6 @@ const Channel = ({
     // jhj
     let loadedChannel = [];
     const childAdded = onChildAdded(ref(db, 'channels'), (snapshot) => {
-
       loadedChannel.push(snapshot.val());
       setChannels(loadedChannel);
       // const dataSnap = snapshotToArray(snapshot.val());
@@ -162,9 +161,7 @@ const Channel = ({
       if (currentChannel) {
         console.log('yes currentCHannel works');
         handleNotification(channelId, currentChannel.id, notifications, snap);
-      }
-
-      else {
+      } else {
         console.log('current channel doent work');
       }
     });
@@ -190,13 +187,14 @@ const Channel = ({
       }
       notifications[index].lastKnownTotal = snap.size;
     } else {
+      console.log('else block bro');
       newArr.push({
         id: channelId,
         total: snap.size,
         lastKnownTotal: snap.size,
         count: 0,
       });
-      setNotifications((prev) => [...prev, newArr]);
+      setNotifications((prev) => [...prev, ...newArr]);
     }
   };
 
