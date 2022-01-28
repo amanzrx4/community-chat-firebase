@@ -70,6 +70,7 @@ const Channel = ({
   const [states, setStates] = useState({
     notifications: [],
   });
+  const [channel, setChannel] = useState(null);
 
   useEffect(() => {
     // jhj
@@ -77,6 +78,7 @@ const Channel = ({
     const childAdded = onChildAdded(ref(db, 'channels'), (snapshot) => {
       loadedChannel.push(snapshot.val());
       setChannels(loadedChannel);
+      if (loadedChannel.length > 0) setChannel(loadedChannel[0]);
       // const dataSnap = snapshotToArray(snapshot.val());
       // const ty = snapshot;
       // console.log(snapshot);
@@ -158,9 +160,9 @@ const Channel = ({
 
   const addNotificationListner = (channelId) => {
     onValue(ref(db, 'messages' + '/' + channelId), (snap) => {
-      if (currentChannel) {
+      if (channel) {
         console.log('yes currentCHannel works');
-        handleNotification(channelId, currentChannel.id, notifications, snap);
+        handleNotification(channelId, channel.id, notifications, snap);
       } else {
         console.log('current channel doent work');
       }
@@ -220,6 +222,7 @@ const Channel = ({
   function currentChannelUpdate(ch) {
     if (currentChannel == ch) return;
     setCurrentChannel(ch);
+    setChannel(ch);
     setActiveClass(ch.id);
     setPrivateChannel(false);
     dispatch({ type: ACTIONS.MESSAGES_LOADING_START });
