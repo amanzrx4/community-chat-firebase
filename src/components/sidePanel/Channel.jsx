@@ -73,65 +73,14 @@ const Channel = ({
   const [channel, setChannel] = useState(null);
 
   useEffect(() => {
-    // jhj
     let loadedChannel = [];
     const childAdded = onChildAdded(ref(db, 'channels'), (snapshot) => {
       loadedChannel.push(snapshot.val());
       setChannels(loadedChannel);
       if (loadedChannel.length > 0) setChannel(loadedChannel[0]);
-      // const dataSnap = snapshotToArray(snapshot.val());
-      // const ty = snapshot;
-      // console.log(snapshot);
-      // setChannels(dataSnap);
-      // if (channels) setCurrentChannel(channels?.channels[0]);
-      // setFirstChannel(channels?.[0]);
-      // setActiveClass(channels[0]?.id);
-      // addNotificationListner(snap.key);
-
       setSnap((prev) => [...prev, snapshot]);
-
       console.log('datasnap object hai bhai ji', snapshot.val());
-
       addNotificationListner(snapshot.key);
-
-      //   snap && console.log('yuehu eh ef', snap?.val());
-      // if (!channel) {
-      //     if (channel && !channel.includes(newArrayItem)) {
-      //         return setChannel((prev) => [...prev, newArrayItem]); // setting the channels..
-      //     }
-      //     setChannel([newArrayItem]); // setting the channels..
-      // }
-      // let newArrayItem = snap.val();
-      // if (!channel.includes(newArrayItem)) {
-      //     setChannel((prev) => [...prev, newArrayItem]); // setting the channels..
-      // }
-
-      //                                                          array state variable
-
-      // if (channel.length > 0 && currentChannel == null) {
-      // setCurrentChannel(channel[0]);
-      // }
-      //                                 but bcz channel array is not yet populated
-      //                                , it gives error
-
-      // addNotificationListner(snap.key); //expects the channel array
-      // setChannelonFirstLoad();
-
-      // if (firstLoad && channelsArray.length > 0 && !currentChannel) {
-
-      // channelsArray.push(snap.val());
-      // setChannelsArray((prev) => [...prev, snap.val()]);
-      // console.log('channels array', channelsArray);
-      //     console.log('yes current channel');
-      //     setCurrentChannel(channelsArray[0]);
-      //     setChannelPublic((prev) => ({
-      //         ...prev,
-      //         channelPub: channelsArray[0],channel
-      //     }));
-      //     setActiveClass(channelsArray[0].id);
-      //     setFirstLoad(false);
-      //     console.log('initial channel set');
-      // }
     });
     return () => {
       childAdded();
@@ -142,6 +91,7 @@ const Channel = ({
     if (channels.length > 0) {
       setCurrentChannel(channels[0]);
       setActiveClass(channels[0].id);
+      setChannel(channels[0]);
     }
 
     console.log('bhai multiple hai yr');
@@ -159,7 +109,7 @@ const Channel = ({
   // }, [channel]);
 
   const addNotificationListner = (channelId) => {
-    onValue(ref(db, 'messages' + '/' + channelId), (snap) => {
+    onValue(child(ref('messages'), channelId), (snap) => {
       if (channel) {
         console.log('yes currentCHannel works');
         handleNotification(channelId, channel.id, notifications, snap);
@@ -172,31 +122,35 @@ const Channel = ({
   const handleNotification = (
     channelId,
     currentChannelId,
-    notifications,
+    notificationi,
     snap
   ) => {
     let lastTotal = 0;
     let newArr = [];
-    let index = notifications.findIndex(
+    let index = notificationi.findIndex(
       (notification) => notification.id === channelId
     );
     if (index !== -1) {
       if (channelId !== currentChannelId) {
-        lastTotal = notifications[index].total;
+        lastTotal = notificationi[index].total;
         if (snap.size - lastTotal > 0) {
-          notifications[index].count = snap.size - lastTotal;
+          notificationi[index].count = snap.size - lastTotal;
         }
       }
-      notifications[index].lastKnownTotal = snap.size;
+      notificationi[index].lastKnownTotal = snap.size;
     } else {
       console.log('else block bro');
-      notifications.push({
+      notificationi.push({
         id: channelId,
         total: snap.size,
         lastKnownTotal: snap.size,
         count: 0,
       });
-      setNotifications((prev) => [...prev, notifications]);
+      setNotifications(notificationi);
+      // setNotifications(prev => [
+      //   ...prev,
+      // notificationi
+      // ])
     }
   };
 
@@ -279,7 +233,6 @@ const Channel = ({
                   selected={ch.id === activeClass}
                   onClick={() => {
                     currentChannelUpdate(ch);
-                  
 
                     // setChannelPublic((prev) =f> ({
                     //     ...prev,
