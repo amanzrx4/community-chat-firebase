@@ -43,7 +43,6 @@ const Channel = ({
   setPrivateChannel,
 }) => {
   const initialNumuniqueUsers = null;
-  const [snapKey, setSnapKey] = useState([]);
   const [numuniqueUsers, setNumuniqueUsers] = useState(initialNumuniqueUsers);
 
   const [listOpen, setListOpen] = useState(false);
@@ -56,30 +55,29 @@ const Channel = ({
     channelsRef: ref(db, 'channels'),
     messagesRef: ref(db, 'messages'),
   });
-  const [firstLoad, setFirstLoad] = useState(true);
   const [firstchannel, setFirstChannel] = useState(null);
   const [notifications, setNotifications] = useState([]);
-  const { channelPub, channelsRef, messagesRef } = channelPublic;
 
-  const [channelsArray, setChannelsArray] = useState([]);
 
-  const [exp, setExp] = useCallbackState([]);
 
-  const [snap, setSnap] = useState([]);
 
   // const [states, setStates] = useState({
 
   // });
-  const [channel, setChannel] = useState(null);
+  const [channel, setChannel] = useState({});
+  let loadedChannel = [];
 
   useEffect(() => {
-    let loadedChannel = [];
     const childAdded = onChildAdded(ref(db, 'channels'), (snapshot) => {
       loadedChannel.push(snapshot.val());
       setChannels(loadedChannel);
-      if (loadedChannel.length > 0) setChannel(loadedChannel[0]);
-      setSnap((prev) => [...prev, snapshot]);
+      setChannel(loadedChannel?.[0]);
+      // if (loadedChannel.length > 0) setChannel(loadedChannel[0]);
+      // setSnap((prev) => [...prev, snapshot]);
       console.log('datasnap object hai bhai ji', snapshot.val());
+
+      // setChannel(loadedChannel[0]);
+
       addNotificationListner(snapshot.key);
     });
     return () => {
@@ -88,10 +86,15 @@ const Channel = ({
   }, []);
 
   useEffect(() => {
+    if (loadedChannel) {
+      setChannel(loadedChannel[0]);
+    }
+  }, [channels]);
+
+  useEffect(() => {
     if (channels.length > 0) {
       setCurrentChannel(channels[0]);
       setActiveClass(channels[0].id);
-      setChannel(channels[0]);
     }
 
     console.log('bhai multiple hai yr');
@@ -101,7 +104,7 @@ const Channel = ({
     onValue(ref(db, 'messages' + '/' + channelId), (snap) => {
       if (channel) {
         console.log('yes currentCHannel works');
-        handleNotification(channelId, channel.id, notifications, snap);
+      handleNotification(channelId, channel.id, notifications, snap);
       } else {
         console.log('current channel doent work');
       }
