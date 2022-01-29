@@ -67,9 +67,9 @@ const Channel = ({
 
   const [snap, setSnap] = useState([]);
 
-  const [states, setStates] = useState({
-    notifications: [],
-  });
+  // const [states, setStates] = useState({
+
+  // });
   const [channel, setChannel] = useState(null);
 
   useEffect(() => {
@@ -97,19 +97,8 @@ const Channel = ({
     console.log('bhai multiple hai yr');
   }, [channels]);
 
-  // useEffect(() => {
-
-  //     if (firstLoad && channel.length > 0) {
-  //         console.log('channel array bro', channel);
-  //         setCurrentChannel(channel[0]);
-  //         setActiveClass(channel[0].id);
-  //         setFirstChannel(channel[0]);
-  //         setFirstLoad(false);
-  //     }
-  // }, [channel]);
-
   const addNotificationListner = (channelId) => {
-    onValue(child(ref('messages'), channelId), (snap) => {
+    onValue(ref(db, 'messages' + '/' + channelId), (snap) => {
       if (channel) {
         console.log('yes currentCHannel works');
         handleNotification(channelId, channel.id, notifications, snap);
