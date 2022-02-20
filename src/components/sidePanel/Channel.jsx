@@ -58,12 +58,10 @@ const Channel = ({
   const [firstchannel, setFirstChannel] = useState(null);
   const [notifications, setNotifications] = useState([]);
 
-
-
-
   // const [states, setStates] = useState({
 
   // });
+  const [notificationBadge, setNotificationBadge] = useState();
   const [channel, setChannel] = useState({});
   let loadedChannel = [];
 
@@ -77,7 +75,6 @@ const Channel = ({
       console.log('datasnap object hai bhai ji', snapshot.val());
 
       // setChannel(loadedChannel[0]);
-
       addNotificationListner(snapshot.key);
     });
     return () => {
@@ -100,11 +97,15 @@ const Channel = ({
     console.log('bhai multiple hai yr');
   }, [channels]);
 
+  useEffect(() => {
+    setNotificationBadge(getNotificationCount(channel));
+  }, [channel]);
+
   const addNotificationListner = (channelId) => {
     onValue(ref(db, 'messages' + '/' + channelId), (snap) => {
       if (channel) {
         console.log('yes currentCHannel works');
-      handleNotification(channelId, channel.id, notifications, snap);
+        handleNotification(channelId, channel.id, notifications, snap);
       } else {
         console.log('current channel doent work');
       }
@@ -114,39 +115,37 @@ const Channel = ({
   const handleNotification = (
     channelId,
     currentChannelId,
-    notificationi,
+    notifications,
     snap
   ) => {
     let lastTotal = 0;
-    let newArr = [];
-    let index = notificationi.findIndex(
+    let newArr = Array.from(notifications);
+    let index = newArr.findIndex(
       (notification) => notification.id === channelId
     );
     if (index !== -1) {
       if (channelId !== currentChannelId) {
-        lastTotal = notificationi[index].total;
+        lastTotal = newArr[index].total;
         if (snap.size - lastTotal > 0) {
-          notificationi[index].count = snap.size - lastTotal;
+          newArr[index].count = snap.size - lastTotal;
         }
       }
-      notificationi[index].lastKnownTotal = snap.size;
+      newArr[index].lastKnownTotal = snap.size;
     } else {
       console.log('else block bro');
-      notificationi.push({
+      newArr.push({
         id: channelId,
         total: snap.size,
         lastKnownTotal: snap.size,
         count: 0,
       });
-      setNotifications(notificationi);
-      // setNotifications(prev => [
-      //   ...prev,
-      // notificationi
-      // ])
+      setNotifications(notifications);
     }
   };
 
   const clearNotifications = () => {
+    if (notifications.length < 1) return;
+
     let index = notifications.findIndex(
       (notification) => notification.id === firstchannel.id
     );
@@ -156,11 +155,7 @@ const Channel = ({
       updatedNotifications[index].total = notifications[index].lastKnownTotal;
 
       updatedNotifications[index].count = 0;
-      // setChannelPublic((prev) => ({
-      //     ...prev,
-      //     notifications: updatedNotifications,
-      // }));
-      // setNotifications(notifications.concat(updatedNotifications));
+
       setNotifications([updatedNotifications]);
     }
   };
@@ -173,6 +168,7 @@ const Channel = ({
     setPrivateChannel(false);
     dispatch({ type: ACTIONS.MESSAGES_LOADING_START });
     setNumuniqueUsers(initialNumuniqueUsers);
+    clearNotifications();
   }
 
   const getNotificationCount = (channel) => {
@@ -187,6 +183,10 @@ const Channel = ({
       console.log('count is working yr', count);
       return count;
     }
+  };
+
+  const getNotificationBadge = (channel) => {
+    const notification = getNotificationCount(channel);
   };
 
   return (
@@ -238,7 +238,7 @@ const Channel = ({
                   <ListItemIcon>
                     <Badge
                       color='secondary'
-                      badgeContent={getNotificationCount(ch)}
+                      badgeContent={notificationBadge}
                       max={999}
                     >
                       <InboxIcon />
