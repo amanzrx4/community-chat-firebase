@@ -51,7 +51,7 @@ const SingleChannelName = ({
       console.log('bro working nan');
       if (snap.size - newObj.total > 0) {
         newObj.count = snap.size - newObj.total;
-        setNotification({ ...newObj });
+        setNotification(newObj);
       }
     }
   };
