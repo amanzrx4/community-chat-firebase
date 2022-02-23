@@ -41,11 +41,11 @@ const Routes = (props) => {
     const [newLoad, setNewLoad] = useState(true);
 
     useEffect(() => {
-        console.log(props.isLoading);
+        // console.log(props.isLoading);
         const unlisten = onAuthStateChanged(auth, (authUser) => {
             // authUser ? setAuthUser(authUser) : setAuthUser(null);
             authUser ? props.setUser(authUser) : setUser(null);
-            console.log('USER:', authUser);
+            // console.log('USER:', authUser);
             // props.isLoading: true
             if (authUser) {
                 props.setUser(authUser);
@@ -58,7 +58,7 @@ const Routes = (props) => {
             }
         });
 
-        console.log('happy s');
+        // console.log('happy s');
 
         return () => {
             unlisten();

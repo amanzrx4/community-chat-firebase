@@ -97,7 +97,7 @@ const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    console.log(login);
+    // console.log(login);
 
     if (!email.includes('@') || !email.includes('.')) {
       setLogin({
@@ -115,10 +115,10 @@ const Login = () => {
       signInWithEmailAndPassword(auth, email, password)
         .then((signedInUser) => {
           setLogin({ ...login, loading: false });
-          console.log(signedInUser);
+          // console.log(signedInUser);
         })
         .catch((e) => {
-          console.log('error', e);
+          // console.log('error', e);
           setLogin({ ...login, loading: false });
         });
 

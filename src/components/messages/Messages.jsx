@@ -79,7 +79,7 @@ const Messages = ({ currentChannel, currentUser, isPrivateChannel }) => {
 
   const messagesLoading = useSelector((state) => state.messagesLoading);
   const dispatch = useDispatch();
-  console.log('messages loading', typeof messagesLoading);
+  // console.log('messages loading', typeof messagesLoading);
 
   const closeModal = () => {
     setOpen(false);
@@ -130,7 +130,7 @@ const Messages = ({ currentChannel, currentUser, isPrivateChannel }) => {
 
   useEffect(() => {
     if (!currentChannel) {
-      console.log('return bcz null');
+      // console.log('return bcz null');
       return;
     }
     let messagesArray = [];
@@ -152,13 +152,13 @@ const Messages = ({ currentChannel, currentUser, isPrivateChannel }) => {
 
         // const arrayOfSnap = snapshotToArray(snapshot.val());
         messagesArray.push(snapshot.val());
-        console.log('filhaal messagfe', snapshot.val());
+        // console.log('filhaal messagfe', snapshot.val());
         setInputState((prev) => ({ ...prev, messages: messagesArray }));
         dispatch({ type: ACTIONS.MESSAGES_LOADING_DONE });
         countUniqueUsers(messagesArray);
       },
       (error) => {
-        console.log('error hai', error);
+        // console.log('error hai', error);
       }
     );
 
@@ -189,7 +189,7 @@ const Messages = ({ currentChannel, currentUser, isPrivateChannel }) => {
 
   const addFile = (fileState) => {
     if (fileState) {
-      console.log('dont touch this file actual', fileState);
+      // console.log('dont touch this file actual', fileState);
       const filePath = `${pathFind()}/${uuidv4()}.jpg`;
 
       const storageRef = storageRefInit(storageFire, filePath);
@@ -202,10 +202,10 @@ const Messages = ({ currentChannel, currentUser, isPrivateChannel }) => {
           const progress =
             (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
           setProgress(progress);
-          console.log('Upload is ' + progress + '% done');
+          // console.log('Upload is ' + progress + '% done');
         },
         (error) => {
-          console.log(error);
+          // console.log(error);
         },
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
@@ -254,18 +254,18 @@ const Messages = ({ currentChannel, currentUser, isPrivateChannel }) => {
   };
 
   const sendMessage = (downloadURLImage = null) => {
-    console.log('download url reached', downloadURLImage);
-    console.log('download url reached 2', downloadURLImage);
+    // console.log('download url reached', downloadURLImage);
+    // console.log('download url reached 2', downloadURLImage);
 
     if (downloadURLImage || messageInput) {
-      console.log('yup doing', downloadURLImage);
+      // console.log('yup doing', downloadURLImage);
       setInputState((prev) => ({
         ...prev,
         loading: true,
       }));
       messageSent(downloadURLImage);
     } else {
-      console.log('not doing bro');
+      // console.log('not doing bro');
       setInputState((prev) => ({
         ...prev,
         error: 'please enter a message',

@@ -118,7 +118,7 @@ const Register = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(register);
+        // console.log(register);
 
         // setRegister({ [e.target.name]: e.target.value });
 
@@ -193,17 +193,17 @@ const Register = () => {
                         )}?id=identicon`,
                     })
                         .then(() => {
-                            console.log(
-                                'everything about current user',
-                                auth.currentUser
-                            );
+                            // console.log(
+                            //     'everything about current user',
+                            //     auth.currentUser
+                            // );
                             saveUser(auth.currentUser).then(() =>
                                 console.log('saved user')
                             );
                             setRegister({ ...register, loading: false });
                         })
                         .catch((error) => {
-                            console.log('error', error);
+                            // console.log('error', error);
                             setRegister({ ...register, loading: false });
                         });
                 })
