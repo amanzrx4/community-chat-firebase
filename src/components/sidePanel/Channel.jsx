@@ -34,6 +34,7 @@ import { CodeSharp } from '@material-ui/icons';
 import { useCallbackState } from './useCallbackState';
 
 import { useDispatch, useSelector } from 'react-redux';
+import SingleChannelName from './SingleChannelName';
 const Channel = ({
   channels,
   setChannels,
@@ -68,13 +69,10 @@ const Channel = ({
   useEffect(() => {
     const childAdded = onChildAdded(ref(db, 'channels'), (snapshot) => {
       loadedChannel.push(snapshot.val());
-      setChannels(loadedChannel);
-      setChannel(loadedChannel?.[0]);
-      // if (loadedChannel.length > 0) setChannel(loadedChannel[0]);
-      // setSnap((prev) => [...prev, snapshot]);
-      console.log('datasnap object hai bhai ji', snapshot.val());
 
-      // setChannel(loadedChannel[0]);
+      setChannels((prev) => [...prev, snapshot.val()]);
+      // setChannels(loadedChannel);
+      // setChannel(loadedChannel?.[0]);
       addNotificationListner(snapshot.key);
     });
     return () => {
@@ -83,8 +81,8 @@ const Channel = ({
   }, []);
 
   useEffect(() => {
-    if (loadedChannel) {
-      setChannel(loadedChannel[0]);
+    if (channels.length > 0 && !channel) {
+      setChannel(channels[0]);
     }
   }, [channels]);
 
@@ -93,24 +91,26 @@ const Channel = ({
       setCurrentChannel(channels[0]);
       setActiveClass(channels[0].id);
     }
-
-    console.log('bhai multiple hai yr');
   }, [channels]);
 
-  useEffect(() => {
-    setNotificationBadge(getNotificationCount(channel));
-  }, [channel]);
+  // useEffect(() => {
+  //   setNotificationBadge(getNotificationCount(channel));
+  // }, [channel]);
 
   const addNotificationListner = (channelId) => {
     onValue(ref(db, 'messages' + '/' + channelId), (snap) => {
       if (channel) {
         console.log('yes currentCHannel works');
+        console.log('snap size{{{{{{{{{{{{{', snap);
+
         handleNotification(channelId, channel.id, notifications, snap);
       } else {
         console.log('current channel doent work');
       }
     });
   };
+
+  const handleNotification2 = () => {};
 
   const handleNotification = (
     channelId,
@@ -139,8 +139,8 @@ const Channel = ({
         lastKnownTotal: snap.size,
         count: 0,
       });
-      setNotifications(notifications);
     }
+    setNotifications((prev) => [...prev, newArr]);
   };
 
   const clearNotifications = () => {
@@ -197,7 +197,7 @@ const Channel = ({
         button
       >
         <ListItemText>
-          CHAN9NELS <span>{channels?.length} </span>
+          CHANNELS <span>({channels?.length})</span>
         </ListItemText>
         <ListItemSecondaryAction>
           <IconButton
@@ -219,33 +219,13 @@ const Channel = ({
           >
             {channels.length > 0 &&
               channels.map((ch) => (
-                <ListItem
-                  name={ch.name}
-                  style={{ width: '100%' }}
-                  selected={ch.id === activeClass}
-                  onClick={() => {
-                    currentChannelUpdate(ch);
-
-                    // setChannelPublic((prev) =f> ({
-                    //     ...prev,
-                    //     channel: ch,
-                    // }));
-                    setFirstChannel(ch);
-                  }}
-                  key={ch.id}
-                  button
-                >
-                  <ListItemIcon>
-                    <Badge
-                      color='secondary'
-                      badgeContent={notificationBadge}
-                      max={999}
-                    >
-                      <InboxIcon />
-                    </Badge>
-                  </ListItemIcon>
-                  <ListItemText primary={ch.name} />
-                </ListItem>
+                <SingleChannelName
+                  activeClass={activeClass}
+                  channel={ch}
+                  currentChannelUpdate={currentChannelUpdate}
+                  getNotificationCount={getNotificationCount}
+                  notifications={notifications}
+                />
               ))}
           </List>
         </Collapse>

@@ -39,8 +39,7 @@ const useStyles = makeStyles((theme) => ({
   },
 
   height1: {
-    // backgroundColor: 'blue',
-    minHeight: '100vh',
+    height: '100vh',
   },
   height2: {
     backgroundColor: 'blue',
@@ -85,6 +84,7 @@ const useStyles = makeStyles((theme) => ({
   },
   item2: {
     width: '100%',
+    overflow: 'scroll',
   },
   input: {
     padding: '14px 8px',
@@ -126,22 +126,22 @@ function App({ currentUser, currentChannel, isPrivateChannel }) {
   //     };
   // }, []);
   return (
-    <div className={classes.root}>
+    <div className={classes.root} style={{ overflow: 'hidden' }}>
       <Grid
         container
         className={classes.height1}
         alignItems='stretch'
-        style={{ height: '100%', maxHeight: '100vh' }}
+        style={{ height: '100vh', overflow: 'hidden' }}
       >
-        <Grid item xs={3} style={{ width: '100%' }}>
-          <div className={classes.divFlex}>
+        <Grid item xs={3} style={{ width: '100%', height: '100%' }}>
+          <div className={classes.divFlex} style={{ height: '100%' }}>
             <div className={classes.item1}>
               <IconButton>
                 <AddCommentIcon fontSize='large' />
               </IconButton>
             </div>
             <Divider orientation='vertical' flexItem />
-            <div className={classes.item2}>
+            <div className={classes.item2} style={{ height: '100%' }}>
               <UserPanel currentUser={currentUser} />
             </div>
           </div>
