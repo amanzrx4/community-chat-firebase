@@ -49,8 +49,8 @@ const SingleChannelName = ({
 
     if (snap.size - newObj.total > 0) {
       newObj.count = snap.size - lastTotal;
+      setNotification({ ...newObj });
     }
-    setNotification({ ...newObj });
   };
 
   useEffect(() => {
