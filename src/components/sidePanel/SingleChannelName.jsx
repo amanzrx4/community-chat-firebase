@@ -38,7 +38,7 @@ const SingleChannelName = ({
       ...notification,
     };
 
-    if (newObj.keys(obj).length === 0) {
+    if (newObj.keys(newObj).length === 0) {
       return setNotification({
         id: channelId,
         total: snap.size,
