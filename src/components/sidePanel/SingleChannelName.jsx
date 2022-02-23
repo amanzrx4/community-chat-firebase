@@ -29,6 +29,7 @@ const SingleChannelName = ({
   };
 
   const getNotificationCount = () => {
+    console.log("notification count>>>>>>>>>", notification.count)
     return notification?.count;
   };
 
