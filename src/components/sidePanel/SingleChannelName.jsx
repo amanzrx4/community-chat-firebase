@@ -10,58 +10,52 @@ const SingleChannelName = ({
   channel,
   currentChannelUpdate,
   activeClass,
-  getNotificationCount,
+
   // notifications,
   currentChannel,
 }) => {
   const [notificationBadge, setNotificationBadge] = useState(null);
-  const [notifications, setNotifications] = useState([]);
+  const [notification, setNotification] = useState({});
 
   const addNotificationListner = (channelId) => {
     onValue(ref(db, 'messages' + '/' + channelId), (snap) => {
       if (channel) {
         console.log('snap size{{{{{{{{{{{{{', snap);
-        handleNotification(channelId, channel.id, notifications, snap);
+        handleNotification(channelId, snap);
       } else {
         console.log('current channel doent work');
       }
     });
   };
 
-  const handleNotification = (
-    channelId,
-    currentChannelId,
-    notifications,
-    snap
-  ) => {
+  const getNotificationCount = () => {
+    return notification?.count;
+  };
+
+  const handleNotification = (channelId, snap) => {
     let lastTotal = 0;
-    let newArr = Array.from(notifications);
-    let index = newArr.findIndex(
-      (notification) => notification.id === channelId
-    );
-    if (index !== -1) {
-      if (channelId !== currentChannelId) {
-        lastTotal = newArr[index].total;
-        if (snap.size - lastTotal > 0) {
-          newArr[index].count = snap.size - lastTotal;
-        }
-      }
-      newArr[index].lastKnownTotal = snap.size;
-    } else {
-      console.log('else block bro');
-      newArr.push({
+    let newObj = {
+      ...notification,
+    };
+
+    if (newObj.keys(obj).length === 0) {
+      return setNotification({
         id: channelId,
         total: snap.size,
         lastKnownTotal: snap.size,
         count: 0,
       });
     }
-    setNotifications([newArr]);
+
+    if (snap.size - newObj.total > 0) {
+      newObj.count = snap.size - lastTotal;
+    }
+    setNotification({ ...newObj });
   };
 
   useEffect(() => {
-    setNotificationBadge(getNotificationCount(channel));
-  }, [notifications]);
+    setNotificationBadge(getNotificationCount());
+  }, [notification]);
 
   useEffect(() => {
     addNotificationListner(channel.id);

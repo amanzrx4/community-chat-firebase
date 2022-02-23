@@ -73,7 +73,7 @@ const Channel = ({
       setChannels((prev) => [...prev, snapshot.val()]);
       // setChannels(loadedChannel);
       // setChannel(loadedChannel?.[0]);
-      addNotificationListner(snapshot.key);
+      // addNotificationListner(snapshot.key);
     });
     return () => {
       childAdded();
