@@ -29,7 +29,7 @@ const SingleChannelName = ({
   };
 
   const getNotificationCount = () => {
-    console.log("notification count>>>>>>>>>", notification.count)
+    console.log('notification count>>>>>>>>>', notification.count);
     return notification?.count;
   };
 
@@ -48,9 +48,11 @@ const SingleChannelName = ({
       });
     }
 
-    if (snap.size - newObj.total > 0) {
-      newObj.count = snap.size - lastTotal;
-      setNotification({ ...newObj });
+    if (currentChannel.id !== channel.id) {
+      if (snap.size - newObj.total > 0) {
+        newObj.count = snap.size - newObj.total;
+        setNotification({ ...newObj });
+      }
     }
   };
 
