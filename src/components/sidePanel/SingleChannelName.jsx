@@ -34,7 +34,6 @@ const SingleChannelName = ({
   };
 
   const handleNotification = (channelId, snap) => {
-    let lastTotal = 0;
     let newObj = {
       ...notification,
     };
@@ -49,6 +48,7 @@ const SingleChannelName = ({
     }
 
     if (currentChannel.id !== channel.id) {
+      console.log('bro working nan');
       if (snap.size - newObj.total > 0) {
         newObj.count = snap.size - newObj.total;
         setNotification({ ...newObj });
