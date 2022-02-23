@@ -140,7 +140,7 @@ const Channel = ({
         count: 0,
       });
     }
-    setNotifications((prev) => [...prev, newArr]);
+    setNotifications([newArr]);
   };
 
   const clearNotifications = () => {
@@ -168,7 +168,7 @@ const Channel = ({
     setPrivateChannel(false);
     dispatch({ type: ACTIONS.MESSAGES_LOADING_START });
     setNumuniqueUsers(initialNumuniqueUsers);
-    clearNotifications();
+    // clearNotifications();
   }
 
   const getNotificationCount = (channel) => {
@@ -225,6 +225,7 @@ const Channel = ({
                   currentChannelUpdate={currentChannelUpdate}
                   getNotificationCount={getNotificationCount}
                   notifications={notifications}
+                  currentChannel={currentChannel}
                 />
               ))}
           </List>

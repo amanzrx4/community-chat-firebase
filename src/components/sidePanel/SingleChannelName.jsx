@@ -11,25 +11,60 @@ const SingleChannelName = ({
   currentChannelUpdate,
   activeClass,
   getNotificationCount,
-  notifications,
+  // notifications,
+  currentChannel,
 }) => {
   const [notificationBadge, setNotificationBadge] = useState(null);
+  const [notifications, setNotifications] = useState([]);
 
-  const handleNotification = () => {};
+  const addNotificationListner = (channelId) => {
+    onValue(ref(db, 'messages' + '/' + channelId), (snap) => {
+      if (channel) {
+        console.log('snap size{{{{{{{{{{{{{', snap);
+        handleNotification(channelId, channel.id, notifications, snap);
+      } else {
+        console.log('current channel doent work');
+      }
+    });
+  };
+
+  const handleNotification = (
+    channelId,
+    currentChannelId,
+    notifications,
+    snap
+  ) => {
+    let lastTotal = 0;
+    let newArr = Array.from(notifications);
+    let index = newArr.findIndex(
+      (notification) => notification.id === channelId
+    );
+    if (index !== -1) {
+      if (channelId !== currentChannelId) {
+        lastTotal = newArr[index].total;
+        if (snap.size - lastTotal > 0) {
+          newArr[index].count = snap.size - lastTotal;
+        }
+      }
+      newArr[index].lastKnownTotal = snap.size;
+    } else {
+      console.log('else block bro');
+      newArr.push({
+        id: channelId,
+        total: snap.size,
+        lastKnownTotal: snap.size,
+        count: 0,
+      });
+    }
+    setNotifications([newArr]);
+  };
 
   useEffect(() => {
     setNotificationBadge(getNotificationCount(channel));
   }, [notifications]);
 
   useEffect(() => {
-    onChildAdded(ref(db, 'messages' + '/' + channel.id), (snap) => {
-      if (channel) {
-        console.log('child ye ra ]]]]]]]]]]]]]]]', snap.val());
-        // handleNotification(channelId, channel.id, notifications, snap);
-      } else {
-        console.log('current channel doent work');
-      }
-    });
+    addNotificationListner(channel.id);
   }, []);
 
   return (
